@@ -2,7 +2,7 @@
 
 ## Description
 
-You will be working in different roles during this project and assigned to various tasks. These tasks will be based on the problems a DevOps faces in his/her daily life.
+You will be working in different roles during this project and assigned to various tasks. These tasks will be based on the problems faced by a DevOps in his/her daily life.
 
 ## Problem Statement
 Companies have problems based on their infrastructures and needs. In this project, you will be working in different roles and you will be assigned some tasks which have backing up, security issues, user and password management, and some string manipulation duties. Sometimes, you need to prepair some bash script files or execute some commands, to be able to accomplish them. There are four tasks. Manager's instructions belonging them can be found below. Please read them carefully and fulfill requirements. Good Luck!
