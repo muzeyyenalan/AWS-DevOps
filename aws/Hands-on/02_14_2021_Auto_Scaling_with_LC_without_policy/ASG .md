@@ -78,7 +78,8 @@ Tag:
 
     - User data
 
-    ```bash
+```bash
+
 #!/bin/bash
 
 #update os
@@ -115,7 +116,7 @@ wget https://raw.githubusercontent.com/awsdevopsteam/ngniex/master/ryu.jpg
 # start apache server
 systemctl start httpd
 systemctl enable httpd
-    ```
+```
 
 - Step 4 Choose Instance Type: `8 GB gp2`
 
