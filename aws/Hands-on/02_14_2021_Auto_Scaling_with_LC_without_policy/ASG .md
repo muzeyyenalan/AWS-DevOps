@@ -60,7 +60,7 @@ Tag:
 
 - But at the end, we will not create a virtual machine. Instead, we'll actually save these things as a template and Auto Scaling will create a new instance according to this configuration when need.
 
-- Step 1 - Choose AMI: `Linux 2 AMI`------> Search for "ami-0742b4e673072066f" ans select
+- Step 1 - Choose AMI: `Linux 2 AMI`------> Search for "ami-033b95fb8079dc481" and select
 
 - Step 2 - Choose Instance Type: `t2.micro`
 
