@@ -39,7 +39,7 @@ Linux is free. Linux is good. Linux is hope.
 The following sed command replaces the word “linux” with “ubuntu” in the file.
 
 ```bash
-sed 's/linux/unutu/' sed.txt
+sed 's/linux/ubuntu/' sed.txt
 ```
 - `s` specifies the substitution operation. 
 - The `/` are delimiters. 
@@ -209,11 +209,11 @@ awk '{print $2}' awk.txt
 
 **Output:**
 ```bash
-This is line 1
-This is line 2
-This is line 3
-This is line 4
-This is line 5
+is
+is
+is
+is
+is
 ```
 
 We can display more field. The example below only display two field.
@@ -320,7 +320,7 @@ crontab -u username -e  # edit other users's crontab file
 
 ```bash
 crontab -e
-0 13 * * * echo date >> /home/ec2-user/date.log
+0 13 * * * date >> /home/ec2-user/date.log
 ```
 
 - Create a cron task updates and upgrades our server every Sunday at 3 a.m.

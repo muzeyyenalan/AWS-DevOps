@@ -19,3 +19,5 @@ List of hands-on trainings within Linux workshop as follows;
 - [Hands-on Linux-08 : Shell Scripting Loops](./linux-08-shell-scripting-loops/README.md)
 
 - [Hands-on Linux-09 : Shell Scripting Functions](./linux-09-shell-scripting-functions/README.md)
+
+- [Hands-on Linux-10 : sed & awk command and crontab](./linux-10-sed&awk-command-and-crontab/README.md)
