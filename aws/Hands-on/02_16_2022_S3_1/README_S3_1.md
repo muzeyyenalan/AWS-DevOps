@@ -36,7 +36,7 @@ At the end of the this hands-on training, students will be able to;
 Bucket name                 : myfirstbucket-osvaldo-01(instead of "osvaldo", students use their own    
                               clarusway student number)
 Region                      : N.Virginia
-Object Ownership            : ACLs disabled (recommended)*explain.
+Object Ownership            : ACLs enabled - Bucket owner preferred *(Since we'll show "make public" feature we activate it.)
 Block all public access     : Checked (KEEP BlOCKED)
 Versioning                  : Disabled
 Tagging                     : 0 Tags
