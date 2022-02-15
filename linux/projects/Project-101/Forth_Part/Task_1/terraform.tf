@@ -37,7 +37,7 @@ resource gitlab_project_cluster "k3s" {
   name                          = "cluster"
   domain                        = "my_DNS.nip.io"
   enabled                       = true
-  kubernetes_api_url            = "https://ec2-private_ip:6443"
+  kubernetes_api_url            = "https://ec2_private_ip:6443"
   kubernetes_token              = templatefile("./linux.txt", { })
   kubernetes_ca_cert            = templatefile("./cert.txt", { })
   kubernetes_namespace          = "linux-dev"
