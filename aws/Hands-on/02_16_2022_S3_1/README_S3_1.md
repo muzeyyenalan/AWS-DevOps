@@ -16,8 +16,6 @@ At the end of the this hands-on training, students will be able to;
 
 - configure S3 bucket with versioning options,
 
-- monitor logging records,
-
 
 ## Outline
 
