@@ -86,7 +86,7 @@ Ten         Warning with "Not Valid! Please enter a number between 1 and 3999, i
 |----cli.sh            # To be delivered by students (CLI commands)
 |----readme.md         # Given to the students (Definition of the project)          
 |----cfn-template.yml  # To be delivered by students (Cloudformation template)
-|----app.py            # To be delivered by students (Python Flask Web Application)
+|----app.py            # Given to the students (Definition of the project)          
 |----templates
         |----index.html  # Given to the students (HTML template)
         |----result.html # Given to the students (HTML template)
