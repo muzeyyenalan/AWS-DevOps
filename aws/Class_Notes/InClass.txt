@@ -1,0 +1,140 @@
+Clarusway
+AWS&DevOps-08
+
+
+
+https://docs.aws.amazon.com/autoscaling/ec2/userguide/what-is-amazon-ec2-auto-scaling.html
+https://aws.amazon.com/ec2/autoscaling/faqs/
+https://aws.amazon.com/ec2/autoscaling/pricing/
+
+AWS Auto Scaling monitors your applications and automatically adjusts capacity to maintain steady, predictable performance at the lowest possible cost.
+
+The services within the AWS Auto Scaling family include:
+
+Amazon EC2 (known as Amazon EC2 Auto Scaling).
+Amazon ECS.
+Amazon DynamoDB.
+Amazon Aurora.
+
+* General EC2 Auto Scaling Concepts
+Amazon EC2 Auto Scaling helps you ensure that you have the correct number of Amazon EC2 instances available to handle the load for your application.
+
+You create collections of EC2 instances, called Auto Scaling groups.
+
+Automatically provides horizontal scaling (scale-out) for your instances.
+
+Triggered by an event of scaling action to either launch or terminate instances.
+
+Availability, cost, and system metrics can all factor into scaling.
+
+Auto Scaling is a region specific service.
+
+Auto Scaling can span multiple AZs within the same AWS region.
+
+You can determine which subnets Auto Scaling will launch new instances into.
+
+Auto Scaling will try to distribute EC2 instances evenly across AZs.
+
+An ASG is a logical grouping of EC2 instances managed by an Auto Scaling Policy.
+
+An ASG can be edited once defined.
+
+You can add a running instance to an ASG if the following conditions are met:
+
+The instance is in a running state.
+The AMI used to launch the instance still exists.
+The instance is not part of another ASG.
+The instance is in the same AZs for the ASG.
+
+* Scaling
+The scaling options define the triggers and when instances should be provisioned/de-provisioned.
+
+There are four scaling options:
+
+Maintain – keep a specific or minimum number of instances running.
+Manual – use maximum, minimum, or a specific number of instances.
+Scheduled – increase or decrease the number of instances based on a schedule.
+Dynamic – scale based on real-time system metrics (e.g. CloudWatch metrics).
+
+* EC2 Auto Scaling – Termination Policy:
+Termination policies control which instances are terminated first when a scale-in event occurs.
+There is a default termination policy and options for configuring your own customized termination policies.
+The default termination policy is designed to help ensure that your instances span Availability Zones evenly for high availability.
+You can define Instance Protection which stops Auto Scaling from scaling in and terminating the instances.
+
+If Auto Scaling fails to launch instances in an AZ it will try other AZs until successful.
+
+The default health check grace period is 300 seconds.
+
+Scale-out is the process in which EC2 instances are launched by the scaling policy.
+
+Scale-in is the process in which EC2 instances are terminated by the scaling policy.
+
+It is recommended to create a scale-in event for each scale-out event created.
+
+An imbalance may occur due to:
+
+Manually removing AZs/subnets from the configuration.
+Manually terminating EC2 instances.
+EC2 capacity issues.
+Spot price is reached.
+
+* Health checks:
+By default uses EC2 status checks.
+Can also use ELB health checks and custom health checks.
+If any health check returns an unhealthy status the instance will be terminated.
+The health check grace period allows a period of time for a new instance to warm up before performing a health check (300 seconds by default).
+If using an ELB it is best to enable ELB health checks as otherwise EC2 status checks may show an instance as being healthy that the ELB has determined is unhealthy. In this case the instance will be removed from service by the ELB but will not be terminated by Auto Scaling.
+
+Elastic IPs and EBS volumes are detached from terminated instances and will need to be manually reattached.
+
+Once in a terminating state an EC2 instance cannot be put back into service again.
+
+However there is a short time period in which a CLI command can be run to change an instance to healthy.
+
+Unlike AZ rebalancing, termination of unhealthy instances happens first, then Auto Scaling attempts to launch new instances to replace terminated instances.
+
+When detaching an instance you can optionally decrement the ASG’s desired capacity (so it doesn’t launch another instance).
+
+An instance can be attached to one ASG at a time.
+
+You can suspend and then resume one or more of the scaling processes for your Auto Scaling group.
+
+Suspending scaling processes can be useful when you want to investigate a configuration problem or other issue with your web application and then make changes to your application, without invoking the scaling processes.
+
+You can manually move an instance from an ASG and put it in the standby state.
+
+Instances in standby state are still managed by Auto Scaling, are charged as normal, and do not count towards available EC2 instance for workload/application use.
+
+Auto scaling does not perform health checks on instances in the standby state.
+
+Standby state can be used for performing updates/changes/troubleshooting etc. without health checks being performed or replacement instances being launched.
+
+When you delete an ASG the instances will be terminated.
+
+Auto Scaling can be configured to send an SNS email when:
+
+An instance is launched.
+An instance is terminated.
+An instance fails to launch.
+An instance fails to terminate.
+Merging ASGs.
+
+You can merge multiple single AZ Auto Scaling Groups into a single multi-AZ ASG.
+Merging can only be performed by using the CLI.
+Process is to rezone one of the groups to cover/span the other AZs for the other ASGs.
+Then delete the other ASGs.
+Can be performed on ASGs with or without ELBs attached to them.
+The resulting ASG must be one of the pre-existing ASGs.
+
+Cooldown Period:
+The cooldown period is a configurable setting for your Auto Scaling group that helps to ensure that it doesn’t launch or terminate additional instances before the previous scaling activity takes effect.
+The default cooldown period is applied when you create your Auto Scaling group.
+The default value is 300 seconds.
+Automatically applies to dynamic scaling and optionally to manual scaling but not supported for scheduled scaling.
+The warm-up period is the period of time in which a newly created EC2 instance launched by ASG using step scaling is not considered toward the ASG metrics.
+
+Monitoring
+Basic monitoring sends EC2 metrics to CloudWatch about ASG instances every 5 minutes.
+
+Detailed can be enabled and sends metrics every 1 minute (chargeable).
