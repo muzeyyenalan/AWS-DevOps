@@ -1,7 +1,4 @@
 
-https://app.peardeck.com/takeaways/101651142867518915087/tyvoqjzgl
-
-
 Examples of Lifecycle Configuration
  
 https://docs.aws.amazon.com/AmazonS3/latest/userguide/lifecycle-configuration-examples.html#lifecycle-config-conceptual-ex7
