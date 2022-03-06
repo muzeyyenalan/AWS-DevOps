@@ -189,13 +189,12 @@ STEP 6: enable Auto-Assign Public IPv4 Address for public subnets
 
 - Go to the Subnets from left hand menu
 
-  - Select 'clarus-az1a-public-subnet' subnet ---> Action ---> Modify auto-assign IP settings  ---> select 'Enable auto-assign public IPv4 address' ---> Save
+  - Select 'clarus-az1a-public-subnet' subnet ---> Action ---> Edit subnet settings ----> Modify auto-assign-Enable ---> Save
 
-  - Select 'clarus-az1b-public-subnet' subnet ---> Action ---> Modify auto-assign
-  IP settings  ---> select 'Enable auto-assign public IPv4 address' ---> Save
+  - Select 'clarus-az1b-public-subnet' subnet ---> Action ---> Edit subnet settings ----> Modify auto-assign-Enable ---> Save
 
-  - Select 'clarus-az1c-public-subnet' subnet ---> Action ---> Modify auto-assign
-  IP settings  ---> select 'Enable auto-assign public IPv4 address' ---> Save
+  - Select 'clarus-az1c-public-subnet' subnet ---> Action ---> Edit subnet settings ----> Modify auto-assign-Enable ---> Save
+  
 
 - Create two instances . One is in the Private and the other one is in Public subnet. Show the public and private IPs of instances. 
 
