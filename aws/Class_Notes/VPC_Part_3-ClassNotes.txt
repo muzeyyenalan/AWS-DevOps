@@ -1,0 +1,17 @@
+https://aws.amazon.com/directconnect/locations/
+
+https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/welcome.html
+
+https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/transit-gateway-vs-vpc-peering.html
+
+https://apps.apple.com/us/app/microsoft-remote-desktop/id1295203466?mt=12
+
+https://www.youtube.com/watch?v=0bHXWIM4_0o
+
+
+https://docs.aws.amazon.com/vpc/latest/privatelink/vpce-interface.html
+
+
+https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints-s3.html#vpc-endpoints-policies-s3
+
+https://docs.aws.amazon.com/vpc/latest/privatelink/endpoint-service.html
