@@ -1,3 +1,7 @@
+![](image/README/1646853846140.png)
+
+
+
 # Hands-on VPC-03 : 
 
 ## Part 5 - Creating VPC peering between two VPCs (Default and Custom one)
