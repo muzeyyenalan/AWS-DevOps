@@ -98,73 +98,106 @@ systemctl enable httpd
 ### STEP 4: Create Auto Scaling and ALB with CloudFormation Template :
 
 - Go the Cloudformation console and create a stack based on the template seen below.
-- Prefer not to copy code, instead use upload from your computer.
+- Prefer not to copy code, instead use upload from your computer. Choose all AZ . !!!!'''
 ```
 AWSTemplateFormatVersion: 2010-09-09
+
 Description: |
-  This is a demo template.
+  This temp creates an ASG behind an ALB.
 Parameters:
-  VpcId:
+  myVPC:
+    Description: Select your VPC
     Type: AWS::EC2::VPC::Id
-    Description: VpcId of your existing Virtual Private Cloud (VPC)
-  Subnets:
+
+  mySubnets:
+    Description: Select at least 2 subnets
     Type: List<AWS::EC2::Subnet::Id>
-    Description: The list of SubnetIds in your Virtual Private Cloud (VPC)
-  InstanceType:
-    Description: WebServer EC2 instance type
-    Type: String
-    Default: t2.micro
-    AllowedValues:
-      - t2.micro
-      - t1.micro
-      - m1.small
-      - m1.medium
-      - m1.large
-    ConstraintDescription: must be a valid EC2 instance type.
-  KeyName:
-    Description: The EC2 Key Pair to allow SSH access to the instances
+
+  myKP:
+    Description: Select your Key
     Type: AWS::EC2::KeyPair::KeyName
-  PolicyTargetValue:
-    Description: Please enter your Target value that triggers the Autoscaling
-    Default: '60'
+
+  myIT:
+    Description: Select instance type
     Type: String
+    Default: t2.micro 
+    AllowedValues: 
+     - t2.micro
+     - t3.micro
+     - t2.nano
+     - t3.nano
   
 Mappings:
   RegionImageMap:
     us-east-1:
-      AMI: ami-0c2b8ca1dad447f8a
+      AMI: ami-0dc2d3e4c0f9ebd18
     us-east-2:
-      AMI: ami-0443305dabd4be2bc
+      AMI: ami-0233c2d874b811deb
     us-west-1:
-      AMI: ami-04b6c97b14c54de18
+      AMI: ami-0ed05376b59b90e46
     us-west-2:
-      AMI: ami-083ac7c7ecf9bb9b0
+      AMI: ami-0dc8f589abe99f538
     eu-west-1:
-      AMI: ami-02b4e72b17337d6c1
+      AMI: ami-058b1b7fe545997ae
+  
 Resources:
- 
-  myAutoScalingGroup:
+  myALB:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      SecurityGroups:
+        - !GetAtt mySG.GroupId
+      Subnets: !Ref mySubnets
+      Type: application
+
+  myListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions: # Required
+        - Type: forward
+          TargetGroupArn: !Ref myTG
+      LoadBalancerArn: !Ref myALB # Required
+      Port: 80
+      Protocol: HTTP
+
+  myASG:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
       AvailabilityZones: !GetAZs 
-      LaunchConfigurationName: !Ref myLaunchConfig
+      DesiredCapacity: "2"
+      HealthCheckGracePeriod: 90
       HealthCheckType: ELB
-      HealthCheckGracePeriod: 300
-      MinSize: '2'
-      MaxSize: '3'
+      LaunchTemplate:
+        LaunchTemplateId: !Ref myLT
+        Version: "1"
+      MaxSize: "3" # Required
+      MinSize: "2" # Required
       TargetGroupARNs:
-        - !Ref myALBTargetGroup
-  
-  myLaunchConfig:
-    Type: AWS::AutoScaling::LaunchConfiguration
+        - !Ref myTG
+
+  myCPUPolicy:
+    Type: AWS::AutoScaling::ScalingPolicy
     Properties:
-      KeyName: !Ref KeyName
-      ImageId: !FindInMap 
-        - RegionImageMap
-        - !Ref AWS::Region
-        - AMI
-      UserData: !Base64 |
-          #!/bin/bash
+      AutoScalingGroupName: !Ref myASG  # Required
+      PolicyType: TargetTrackingScaling
+      TargetTrackingConfiguration:
+        PredefinedMetricSpecification:
+          PredefinedMetricType: ASGAverageCPUUtilization
+        TargetValue: 60.0
+
+  myLT:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateData:
+        ImageId: !FindInMap 
+         - RegionImageMap
+         - !Ref AWS::Region
+         - AMI
+        InstanceType: !Ref myIT
+        KeyName: !Ref myKP
+        SecurityGroupIds:
+          - !GetAtt mySG.GroupId
+        UserData: !Base64 |
+          #! /bin/bash
           yum update -y
           yum install -y httpd
           TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"` \
@@ -178,7 +211,7 @@ Resources:
               <title> Congratulations! You have created an instance from Launch Template</title>
           </head>
           <body>
-              <h1>This web server is launched from launch configuration by YOUR_NAME</h1>
+              <h1>This web server is launched from launch template by YOUR_NAME</h1>
               <p>This instance is created at <b>$DATE_TIME</b></p>
               <p>Private IP address of this instance is <b>$PRIVATE_IP</b></p>
               <p>Public IP address of this instance is <b>$PUBLIC_IP</b></p>
@@ -186,57 +219,21 @@ Resources:
           </html>" > /var/www/html/index.html
           systemctl start httpd
           systemctl enable httpd
-      SecurityGroups:
-        - !Ref mySecurityGroup
-      InstanceType: !Ref InstanceType
-  
-  myCPUPolicy:
-    Type: "AWS::AutoScaling::ScalingPolicy"
+  myTG:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      AutoScalingGroupName: !Ref myAutoScalingGroup
-      PolicyType: TargetTrackingScaling
-      TargetTrackingConfiguration:
-        PredefinedMetricSpecification:
-          PredefinedMetricType: ASGAverageCPUUtilization
-        TargetValue: !Ref PolicyTargetValue
-  
-
-  myApplicationLoadBalancer:
-    Type: "AWS::ElasticLoadBalancingV2::LoadBalancer"
-    Properties:
-      SecurityGroups:
-        - !GetAtt mySecurityGroup.GroupId
-      Subnets: !Ref Subnets
-       
-  
-
-  myALBListener:
-    Type: "AWS::ElasticLoadBalancingV2::Listener"
-    Properties:
-      DefaultActions: 
-        - Type: forward
-          TargetGroupArn: !Ref myALBTargetGroup
-      LoadBalancerArn: !Ref myApplicationLoadBalancer
-      Port: 80
-      Protocol: HTTP
-  
-  
-  myALBTargetGroup:
-    Type: "AWS::ElasticLoadBalancingV2::TargetGroup"
-    Properties:
-      HealthCheckIntervalSeconds: 25
+      HealthCheckIntervalSeconds: 10
       HealthCheckTimeoutSeconds: 5
-      HealthyThresholdCount: 3
+      HealthyThresholdCount: 5
       Port: 80
       Protocol: HTTP
       UnhealthyThresholdCount: 3
-      VpcId: !Ref VpcId
-  
-  
-  mySecurityGroup:
-    Type: "AWS::EC2::SecurityGroup"
+      VpcId: !Ref myVPC
+
+  mySG:
+    Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Enables SSH and HTTP
+      GroupDescription: Enables SSH and HTTP # Required
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22
@@ -246,16 +243,15 @@ Resources:
           FromPort: 80
           ToPort: 80
           CidrIp: 0.0.0.0/0
-          
-    
+      VpcId: !Ref myVPC
   
 Outputs:
-  URL:
-    Description: The URL of the website
+  AppUrl:
+    Description: URL of the ALB
     Value: !Join 
-      - ''
-      - - 'http://'
-        - !GetAtt myApplicationLoadBalancer.DNSName
+       - ''
+       - - 'http://'
+         - !GetAtt myALB.DNSName
 ```
 
 
