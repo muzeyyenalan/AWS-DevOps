@@ -414,7 +414,7 @@ Rate limit:         100 (this means max of 100 requests in 5 minutes)
 #!/bin/bash
 for x in {1..200}
 do
-        output=$(curl -s http://myloadbalancer-602599660.us-east-1.elb.amazonaws.com/ | grep h1)
+        output=$(curl -s https://MyLoadBalancer-188635875.us-east-1.elb.amazonaws.com/ | grep h1)
         echo $x - $output
         sleep 1
 done
